@@ -10,3 +10,4 @@ export { Spinner } from "./Spinner/Spinner";
 export { ToggleItems } from "./ToggleItems/ToggleItems";
 export { VersionNotifier } from "./VersionNotifier/VersionNotifier";
 export { Pagination } from "./Pagination/Pagination";
+export { BarChart } from "./BarChart/BarChart";

@@ -10,6 +10,7 @@ import { Block, Elem } from "../../utils/bem";
 import { CreateProject } from "../CreateProject/CreateProject";
 import { DataManagerPage } from "../DataManager/DataManager";
 import { SettingsPage } from "../Settings";
+import { ProjectStats } from "../ProjectStats/ProjectStats";
 import { EmptyProjectsList, ProjectsList } from "./ProjectsList";
 import { useAbortController } from "@humansignal/core";
 import "./Projects.scss";
@@ -154,6 +155,7 @@ ProjectsPage.routes = ({ store }) => [
     pages: {
       DataManagerPage,
       SettingsPage,
+      ProjectStats,
     },
   },
 ];

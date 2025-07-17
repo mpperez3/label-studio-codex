@@ -27,7 +27,14 @@ from label_studio_sdk.label_interface.control_tags import (
     TimeSeriesLabelsTag,
     VideoRectangleTag,
 )
-from projects.models import Project, ProjectImport, ProjectOnboarding, ProjectReimport, ProjectSummary
+from projects.models import (
+    Project,
+    ProjectGroup,
+    ProjectImport,
+    ProjectOnboarding,
+    ProjectReimport,
+    ProjectSummary,
+)
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
@@ -203,6 +210,7 @@ class ProjectSerializer(FlexFieldsModelSerializer):
             'memberships': {'required': False},
             'title': {'required': False},
             'created_by': {'required': False},
+            'group': {'required': False},
         }
         fields = [
             'id',
@@ -215,6 +223,7 @@ class ProjectSerializer(FlexFieldsModelSerializer):
             'enable_empty_annotation',
             'show_annotation_history',
             'organization',
+            'group',
             'color',
             'maximum_annotations',
             'is_published',
@@ -408,3 +417,9 @@ class GetFieldsSerializer(serializers.Serializer):
     def validate_filter(self, value):
         if value in ['all', 'pinned_only', 'exclude_pinned']:
             return value
+
+
+class ProjectGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectGroup
+        fields = ['id', 'title', 'description', 'parent', 'organization', 'created_at', 'updated_at']

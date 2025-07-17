@@ -51,9 +51,15 @@ _api_urlpatterns_templates = [
     path('', api.TemplateListAPI.as_view(), name='template-list'),
 ]
 
+_api_urlpatterns_groups = [
+    path('', api.ProjectGroupListAPI.as_view(), name='project-group-list'),
+    path('<int:pk>/', api.ProjectGroupAPI.as_view(), name='project-group-detail'),
+]
+
 
 urlpatterns = [
     path('projects/', include(_urlpatterns)),
     path('api/projects/', include((_api_urlpatterns, app_name), namespace='api')),
     path('api/templates/', include((_api_urlpatterns_templates, app_name), namespace='api-templates')),
+    path('api/project-groups/', include((_api_urlpatterns_groups, app_name), namespace='api-project-groups')),
 ]

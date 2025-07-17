@@ -112,6 +112,32 @@ ProjectMixin = load_func(settings.PROJECT_MIXIN)
 recalculate_all_stats = load_func(settings.RECALCULATE_ALL_STATS)
 
 
+class ProjectGroup(models.Model):
+    title = models.CharField(_('title'), max_length=1000)
+    description = models.TextField(_('description'), blank=True, default='')
+    organization = models.ForeignKey(
+        'organizations.Organization',
+        on_delete=models.CASCADE,
+        related_name='project_groups',
+        null=True,
+    )
+    parent = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='subgroups',
+    )
+    created_at = models.DateTimeField(_('created at'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('updated at'), auto_now=True)
+
+    def __str__(self):
+        return f'{self.title}, id={self.pk}'
+
+    class Meta:
+        db_table = 'project_group'
+
+
 class Project(ProjectMixin, models.Model):
     class SkipQueue(models.TextChoices):
         # requeue to the end of the same annotator’s queue => annotator gets this task at the end of the queue
@@ -142,6 +168,13 @@ class Project(ProjectMixin, models.Model):
 
     organization = models.ForeignKey(
         'organizations.Organization', on_delete=models.CASCADE, related_name='projects', null=True
+    )
+    group = models.ForeignKey(
+        ProjectGroup,
+        on_delete=models.SET_NULL,
+        related_name='projects',
+        null=True,
+        blank=True,
     )
     label_config = models.TextField(
         _('label config'),

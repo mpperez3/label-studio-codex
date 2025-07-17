@@ -27,11 +27,19 @@ from ml.serializers import MLBackendSerializer
 from projects.functions.next_task import get_next_task
 from projects.functions.stream_history import get_label_stream_history
 from projects.functions.utils import recalculate_created_annotations_and_labels_from_scratch
-from projects.models import Project, ProjectImport, ProjectManager, ProjectReimport, ProjectSummary
+from projects.models import (
+    Project,
+    ProjectGroup,
+    ProjectImport,
+    ProjectManager,
+    ProjectReimport,
+    ProjectSummary,
+)
 from projects.serializers import (
     GetFieldsSerializer,
     ProjectCountsSerializer,
     ProjectImportSerializer,
+    ProjectGroupSerializer,
     ProjectLabelConfigSerializer,
     ProjectModelVersionExtendedSerializer,
     ProjectReimportSerializer,
@@ -899,3 +907,32 @@ class ProjectModelVersions(generics.RetrieveAPIView):
         count = project.delete_predictions(model_version=model_version)
 
         return Response(data=count)
+
+
+class ProjectGroupListAPI(generics.ListCreateAPIView):
+    parser_classes = (JSONParser, FormParser, MultiPartParser)
+    serializer_class = ProjectGroupSerializer
+    permission_required = ViewClassPermission(
+        GET=all_permissions.projects_view,
+        POST=all_permissions.projects_create,
+    )
+
+    def get_queryset(self):
+        return ProjectGroup.objects.filter(organization=self.request.user.active_organization)
+
+    def perform_create(self, serializer):
+        serializer.save(organization=self.request.user.active_organization)
+
+
+class ProjectGroupAPI(generics.RetrieveUpdateDestroyAPIView):
+    parser_classes = (JSONParser, FormParser, MultiPartParser)
+    serializer_class = ProjectGroupSerializer
+    permission_required = ViewClassPermission(
+        GET=all_permissions.projects_view,
+        PATCH=all_permissions.projects_change,
+        PUT=all_permissions.projects_change,
+        DELETE=all_permissions.projects_delete,
+    )
+
+    def get_queryset(self):
+        return ProjectGroup.objects.filter(organization=self.request.user.active_organization)

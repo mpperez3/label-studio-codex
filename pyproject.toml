@@ -233,6 +233,8 @@ mock = ">=5.1.0"
 moto = ">=4.2.6"
 requests-mock = "1.12.1"
 factory-boy = "^3.3.3"
+boto3 = "1.39.3"
+botocore = ">=1.39.3,<2.0.0"
 
 [tool.poetry.group.build.dependencies]
 twine = ">=6.1.0"
